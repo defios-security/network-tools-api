@@ -13,7 +13,7 @@ To run NetworkToolsAPI inside a Docker container, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/irradiatedcircle/network-tools-api.git
    cd NetworkToolsAPI```
    
 2. Build the Docker image:
