@@ -10,23 +10,33 @@ Before you begin, ensure you have Docker installed on your machine. You can down
 
 To run NetworkToolsAPI inside a Docker container, follow these steps:
 
+
 1. **Clone the repository:**
 
-   ```bash
-   git clone https://github.com/irradiatedcircle/network-tools-api.git
-   cd NetworkToolsAPI```
+```bash
+git clone https://github.com/irradiatedcircle/network-tools-api.git
+cd NetworkToolsAPI
+```
+
    
 2. Build the Docker image:
 
-```docker build -t networktoolsapi .```
+```
+docker build -t networktoolsapi .
+```
+
 
 3. Run the Docker container:
 
-```docker run -d -p 8080:8080 networktoolsapi```
+```
+docker run -d -p 8080:8080 networktoolsapi
+```
+
 
 ## Verify the deployment:
 
 Open your web browser and navigate to http://localhost:8080/health. You should see a JSON response `{ "status": "OK" }`, indicating that the server is running successfully.
+
 
 ## API Endpoints
 
