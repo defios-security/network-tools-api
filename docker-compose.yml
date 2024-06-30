@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  network-tools:
+    container_name: network-tools
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: production
+    networks:
+      - network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  network:
+    driver: bridge
