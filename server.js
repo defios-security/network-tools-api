@@ -115,6 +115,19 @@ server.get('/nmap', (req, res, next) => {
   executeCommand(command, res, next);
 });
 
+// Endpoint for whois
+server.get('/whois', (req, res, next) => {
+  const domain = req.query.domain;
+
+  if (!domain) {
+    res.send(400, { error: 'Domain query parameter is required' });
+    return next();
+  }
+
+  const command = `whois ${domain}`;
+  executeCommand(command, res, next);
+});
+
 // Health check endpoint
 server.get('/health', (req, res, next) => {
   res.send(200, { status: 'OK' });

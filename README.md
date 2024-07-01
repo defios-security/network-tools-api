@@ -49,7 +49,7 @@ The following endpoints are available:
 | `/traceroute` | Perform a traceroute to a host.         | `host` (required)                              | `/traceroute?host=example.com`       |
 | `/nmap`       | Scan a host for open ports using `nmap`.| `host` (required), `options` (optional)         | `/nmap?host=example.com&options=-sV` |
 | `/health`     | Health check endpoint.                  | None                                            | `/health`                            |
-
+| `/whois`      | Perform a whois lookup.                 | `domain` (required)                            | `/whois?domain=example.com`            |
 
 Troubleshooting
 Server is busy: If the server is busy handling maximum concurrent tasks (MAX_CONCURRENT_TASKS), requests are queued and processed sequentially.

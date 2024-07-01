@@ -10,6 +10,7 @@ RUN apt-get update && \
         dnsutils \
         iputils-ping \
         traceroute \
+		whois \
         nmap && \
     rm -rf /var/lib/apt/lists/*
 
