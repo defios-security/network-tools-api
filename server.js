@@ -11,6 +11,13 @@ const server = restify.createServer({
 
 server.use(restify.plugins.queryParser());
 
+// Rate limiting middleware
+server.use(restify.plugins.throttle({
+  burst: 10,  // Max 10 concurrent requests
+  rate: 0.1667,  // Steady state rate of 10 requests per 60 seconds
+  ip: true  // Apply rate limiting based on IP address
+}));
+
 const MAX_CONCURRENT_TASKS = 8;
 let activeTasks = 0;
 const requestQueue = [];
