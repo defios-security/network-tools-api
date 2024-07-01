@@ -1,6 +1,7 @@
 const restify = require('restify');
 const { exec } = require('child_process');
 const pino = require('pino');
+const validator = require('validator');
 
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
@@ -21,6 +22,10 @@ server.use(restify.plugins.throttle({
 const MAX_CONCURRENT_TASKS = 8;
 let activeTasks = 0;
 const requestQueue = [];
+
+const sanitizeInput = (input) => {
+  return validator.escape(input.trim());
+};
 
 const executeCommand = (command, res, next) => {
   // Check if the command requires sudo
@@ -63,11 +68,16 @@ const processQueue = () => {
 
 // Endpoint for dig
 server.get('/dig', (req, res, next) => {
-  const domain = req.query.domain;
-  const type = req.query.type || 'A';
+  const domain = sanitizeInput(req.query.domain);
+  const type = sanitizeInput(req.query.type || 'A');
 
-  if (!domain) {
-    res.send(400, { error: 'Domain query parameter is required' });
+  if (!domain || !validator.isFQDN(domain)) {
+    res.send(400, { error: 'Valid domain query parameter is required' });
+    return next();
+  }
+
+  if (!validator.isIn(type, ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'PTR', 'SOA', 'SRV', 'TXT'])) {
+    res.send(400, { error: 'Invalid DNS record type' });
     return next();
   }
 
@@ -77,10 +87,10 @@ server.get('/dig', (req, res, next) => {
 
 // Endpoint for ping
 server.get('/ping', (req, res, next) => {
-  const host = req.query.host;
+  const host = sanitizeInput(req.query.host);
 
-  if (!host) {
-    res.send(400, { error: 'Host query parameter is required' });
+  if (!host || !validator.isFQDN(host)) {
+    res.send(400, { error: 'Valid host query parameter is required' });
     return next();
   }
 
@@ -90,10 +100,10 @@ server.get('/ping', (req, res, next) => {
 
 // Endpoint for traceroute
 server.get('/traceroute', (req, res, next) => {
-  const host = req.query.host;
+  const host = sanitizeInput(req.query.host);
 
-  if (!host) {
-    res.send(400, { error: 'Host query parameter is required' });
+  if (!host || !validator.isFQDN(host)) {
+    res.send(400, { error: 'Valid host query parameter is required' });
     return next();
   }
 
@@ -103,11 +113,11 @@ server.get('/traceroute', (req, res, next) => {
 
 // Endpoint for nmap
 server.get('/nmap', (req, res, next) => {
-  const host = req.query.host;
-  const options = req.query.options || '';
+  const host = sanitizeInput(req.query.host);
+  const options = sanitizeInput(req.query.options || '');
 
-  if (!host) {
-    res.send(400, { error: 'Host query parameter is required' });
+  if (!host || !validator.isFQDN(host)) {
+    res.send(400, { error: 'Valid host query parameter is required' });
     return next();
   }
 
@@ -124,10 +134,10 @@ server.get('/nmap', (req, res, next) => {
 
 // Endpoint for whois
 server.get('/whois', (req, res, next) => {
-  const domain = req.query.domain;
+  const domain = sanitizeInput(req.query.domain);
 
-  if (!domain) {
-    res.send(400, { error: 'Domain query parameter is required' });
+  if (!domain || !validator.isFQDN(domain)) {
+    res.send(400, { error: 'Valid domain query parameter is required' });
     return next();
   }
 
